@@ -63,7 +63,7 @@ fun HistoryScreen(vm: QuizViewModel) {
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(SMALL_SPACE)) {
                 items(attempts) { attempt ->
-                    AttemptCard(attempt) { vm.open(Screen.Report(login, attempt)) }
+                    AttemptCard(attempt) { vm.open(Screen.Report(login, attempt, returnTo = Screen.History)) }
                 }
             }
         }

@@ -200,7 +200,7 @@ fun AdminAttemptsScreen(vm: QuizViewModel) {
                 items(rows) { (login, attempt) ->
                     Column {
                         AttemptCard(attempt, login) {
-                            vm.open(Screen.Report(login, attempt, fromAdmin = true))
+                            vm.open(Screen.Report(login, attempt, returnTo = Screen.AdminAttempts))
                         }
                         TextButton(onClick = { vm.deleteAttempt(login, attempt) }) {
                             Text("Удалить попытку", color = MaterialTheme.colorScheme.error)

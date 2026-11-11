@@ -154,7 +154,7 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
             Screen.Topics, Screen.Admin -> logout()
             Screen.Quiz -> finishTest(Attempt.INTERRUPTED)
             Screen.History -> screen = Screen.Topics
-            is Screen.Report -> screen = if (current.fromAdmin) Screen.AdminAttempts else Screen.Topics
+            is Screen.Report -> screen = current.returnTo
             Screen.AdminTopics, Screen.AdminSettings, Screen.AdminAttempts -> screen = Screen.Admin
             is Screen.AdminQuestions -> screen = Screen.AdminTopics
             is Screen.AdminQuestion -> screen = Screen.AdminQuestions(current.question.topic)

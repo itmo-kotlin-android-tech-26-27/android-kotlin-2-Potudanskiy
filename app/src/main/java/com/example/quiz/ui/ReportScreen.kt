@@ -26,7 +26,7 @@ fun ReportScreen(vm: QuizViewModel, report: Screen.Report) {
 
     LazyColumn(verticalArrangement = Arrangement.spacedBy(SMALL_SPACE)) {
         item { ReportSummary(report.login, attempt, onBack = { vm.back() }) }
-        if (!report.fromAdmin) {
+        if (report.returnTo != Screen.AdminAttempts) {
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(SMALL_SPACE)) {
                     Button(

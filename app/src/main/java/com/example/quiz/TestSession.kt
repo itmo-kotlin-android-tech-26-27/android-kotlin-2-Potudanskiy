@@ -39,6 +39,7 @@ data class TestSession(
 
     /** Показывает следующий вопрос. Если тема закончилась, current становится null. */
     fun next(): TestSession {
+        if (!isAnswered) return this
         if (topicFinished) return copy(current = null)
         val question = pickQuestion() ?: return copy(current = null)
         return copy(current = question, asked = asked + question)

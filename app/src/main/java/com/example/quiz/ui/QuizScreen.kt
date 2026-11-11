@@ -37,7 +37,7 @@ import com.example.quiz.TestSession
 
 private const val SECONDS_IN_MINUTE = 60
 private const val WARNING_SECONDS = 10
-private const val EMPTY_SLOT = '_'
+private const val EMPTY_SLOT = '\u0000'
 
 /** Весь тест идет на одном экране: меняется только вопрос. */
 @Composable
@@ -165,18 +165,25 @@ private fun MatchAnswer(
             question.right.forEachIndexed { index, item -> Text("${FIRST_LETTER + index}. $item") }
         }
     }
-    Text("Выберите пару для каждого номера:", style = MaterialTheme.typography.titleSmall)
+    Text(
+        "Выберите пару для каждого номера. Повторное нажатие снимает выбор.",
+        style = MaterialTheme.typography.titleSmall,
+    )
     question.left.indices.forEach { leftIndex ->
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text("${leftIndex + 1} →", modifier = Modifier.padding(end = SMALL_SPACE))
             FlowRow(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(SMALL_SPACE)) {
                 question.right.indices.forEach { rightIndex ->
                     val letter = FIRST_LETTER + rightIndex
+                    val selected = letters.getOrNull(leftIndex) == letter
                     FilterChip(
-                        selected = letters.getOrNull(leftIndex) == letter,
-                        onClick = { onChange(withLetter(letters, leftIndex, letter, question.left.size)) },
+                        selected = selected,
+                        onClick = {
+                            val newLetter = if (selected) EMPTY_SLOT else letter
+                            onChange(withLetter(letters, leftIndex, newLetter, question.left.size))
+                        },
                         label = { Text(letter.toString()) },
-                        enabled = enabled,
+                        enabled = enabled && (selected || letter !in letters),
                     )
                 }
             }
@@ -184,7 +191,7 @@ private fun MatchAnswer(
     }
 }
 
-/** Ставит букву на нужное место: ("B_A", 1, 'C') -> "BCA". Невыбранные места — EMPTY_SLOT. */
+/** Меняет букву в одной строке. Невыбранные места — EMPTY_SLOT. */
 private fun withLetter(letters: String, index: Int, letter: Char, size: Int): String =
     letters.padEnd(size, EMPTY_SLOT).toCharArray().also { it[index] = letter }.concatToString()
 
